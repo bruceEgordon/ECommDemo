@@ -1,0 +1,13 @@
+﻿@model IEnumerable<EComm.Data.Product>
+
+        <table class="table-striped">
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td><a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.ProductName</a></td>
+                    <td>@product.FormattedUnitPrice</td>
+                </tr>
+
+            }
+        </table>
+

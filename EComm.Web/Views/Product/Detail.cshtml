@@ -1,0 +1,10 @@
+﻿@model EComm.Data.Product
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h4>@Model.ProductName</h4>
+<h4>Price: @Model.FormattedUnitPrice</h4>
+<h4>Supplier: @Model.Supplier.CompanyName</h4>
+<h4>Package: @Model.Package</h4>
+
