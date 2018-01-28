@@ -8,3 +8,30 @@
 <h4>Supplier: @Model.Supplier.CompanyName</h4>
 <h4>Package: @Model.Package</h4>
 
+<form id="addToCartForm" asp-controller="Product" asp-action="AddToCart" asp-route-id="@Model.Id">
+    <input name="quantity" size="3" />
+    <input type="submit" value="Add to Cart" />
+</form>
+
+<div id="message"></div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                var formData = {
+                    'quantity': $('input[name=quantity]').val()
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: $('#addToCartForm').attr('action'),
+                    data: formData
+                }).done(function (response) {
+                    $('#message').html(response);
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+}
+

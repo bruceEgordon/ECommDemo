@@ -30,6 +30,19 @@ namespace EComm.Web.Controllers
 
             return View(product);
         }
+
+        [HttpPost]
+        public IActionResult AddToCart(int id, int quantity)
+        {
+            var product = _dataContext.Products.SingleOrDefault(p => p.Id == id);
+            var totalCost = quantity * product.UnitPrice;
+
+            string message = $"You added {product.ProductName} " +
+                $"(x {quantity}) to your cart " +
+                $"at a total cost of {totalCost:C}.";
+
+            return PartialView("_AddedToCart", message);
+        }
     }
 
     public class ProductsList: ViewComponent
