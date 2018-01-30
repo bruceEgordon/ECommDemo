@@ -38,6 +38,8 @@ namespace EComm.Web
                 options.AddPolicy("AdminsOnly", policy => 
                     policy.RequireClaim(ClaimTypes.Role, "Admin"));
             });
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +56,7 @@ namespace EComm.Web
             }
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseAuthentication();
 
