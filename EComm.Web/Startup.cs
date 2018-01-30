@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EComm.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +28,16 @@ namespace EComm.Web
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ECommConnection")));
             services.AddMvc();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = new PathString("/Auth/Login");
+                options.AccessDeniedPath = new PathString("/Auth/Forbidden");
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminsOnly", policy => 
+                    policy.RequireClaim(ClaimTypes.Role, "Admin"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +54,8 @@ namespace EComm.Web
             }
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
