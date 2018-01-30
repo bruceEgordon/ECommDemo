@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EComm.Data;
 using EComm.Web.Models;
 using EComm.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace EComm.Web.Controllers
             return View();
         }
 
+        [Authorize(Policy = "AdminsOnly")]
         [Route("product/{id:int}")]
         public IActionResult Detail(int id)
         {

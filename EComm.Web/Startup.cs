@@ -28,8 +28,8 @@ namespace EComm.Web
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ECommConnection")));
             services.AddMvc();
-            services.ConfigureApplicationCookie(options =>
-            {
+            
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
                 options.LoginPath = new PathString("/Auth/Login");
                 options.AccessDeniedPath = new PathString("/Auth/Forbidden");
             });
@@ -38,6 +38,7 @@ namespace EComm.Web
                 options.AddPolicy("AdminsOnly", policy => 
                     policy.RequireClaim(ClaimTypes.Role, "Admin"));
             });
+
             services.AddMemoryCache();
             services.AddSession();
         }
