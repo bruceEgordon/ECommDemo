@@ -41,7 +41,7 @@ namespace EComm.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseStaticFiles();
             app.UseSession();
             app.UseMvc(routes =>

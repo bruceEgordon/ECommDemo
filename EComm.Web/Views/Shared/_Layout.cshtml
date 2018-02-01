@@ -36,6 +36,11 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a asp-controller="Product" asp-action="Cart">Shopping Cart</a></li>
+                    @if(User?.Identity?.IsAuthenticated ?? false)
+                    { 
+                        <li><a asp-controller="Product" asp-action="Cart">Logout</a></li>
+
+                    }
                 </ul>
             </div>
         </div>
