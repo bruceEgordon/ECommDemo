@@ -38,7 +38,7 @@
                     <li><a asp-controller="Product" asp-action="Cart">Shopping Cart</a></li>
                     @if(User?.Identity?.IsAuthenticated ?? false)
                     { 
-                        <li><a asp-controller="Product" asp-action="Cart">Logout</a></li>
+                        <li><a asp-controller="Auth" asp-action="Logout">Logout</a></li>
 
                     }
                 </ul>

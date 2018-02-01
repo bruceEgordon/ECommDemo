@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EComm.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EComm.Web.Controllers
@@ -35,6 +36,12 @@ namespace EComm.Web.Controllers
             await HttpContext.SignInAsync("Cookies", principal);
 
             if (lvm.ReturnUrl != null) return LocalRedirect(lvm.ReturnUrl);
+            return RedirectToAction("Index", "Home");
+        }
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
