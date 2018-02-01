@@ -47,7 +47,7 @@ namespace EComm.Web.Controllers
 
             var cart = ShoppingCart.GetFromSession(HttpContext.Session);
             var lineItem = cart.LineItems.SingleOrDefault(item => item.Product.Id == id);
-            if(lineItem != null)
+            if (lineItem != null)
             {
                 lineItem.Quantity += quantity;
             }
@@ -82,6 +82,41 @@ namespace EComm.Web.Controllers
             //TODO: Charge the customer's card and record the order
             HttpContext.Session.Clear();
             return View("ThankYou");
+        }
+
+        [HttpGet("api/products")]
+        public IActionResult Get()
+        {
+            var products = _dataContext.Products.ToList();
+            return new ObjectResult(products);
+        }
+
+        [HttpGet("product/{id:int}")]
+        public IActionResult Get(int id)
+        {
+            var product = _dataContext.Products.SingleOrDefault(p => p.Id == id);
+            if (product == null) return NotFound();
+
+            return new ObjectResult(product);
+        }
+
+        [HttpPut("api/product/{id:int}")]
+        public IActionResult Put(int id, [FromBody]Product product)
+        {
+            if(product == null || product.Id != id){ return BadRequest(); }
+
+            var existing = _dataContext.Products.SingleOrDefault(p => p.Id == id);
+
+            if (existing == null) return NotFound();
+
+            existing.ProductName = product.ProductName;
+            existing.UnitPrice = product.UnitPrice;
+            existing.Package = product.Package;
+            existing.IsDiscontinued = product.IsDiscontinued;
+            existing.SupplierId = product.SupplierId;
+            _dataContext.SaveChanges();
+
+            return new NoContentResult();
         }
     }
 
