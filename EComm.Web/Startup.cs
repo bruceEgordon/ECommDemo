@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EComm.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +28,17 @@ namespace EComm.Web
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ECommConnection")));
             services.AddMvc();
+            
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+                options.LoginPath = new PathString("/Auth/Login");
+                options.AccessDeniedPath = new PathString("/Auth/Forbidden");
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminsOnly", policy => 
+                    policy.RequireClaim(ClaimTypes.Role, "Admin"));
+            });
+
             services.AddMemoryCache();
             services.AddSession();
         }
@@ -44,6 +58,9 @@ namespace EComm.Web
             app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseStaticFiles();
             app.UseSession();
+
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
