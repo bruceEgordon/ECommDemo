@@ -6,19 +6,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EComm.Web.Models;
 using EComm.Data;
+using Microsoft.Extensions.Logging;
 
 namespace EComm.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private DataContext _dataContext;
+        private ILogger<HomeController> logger;
 
-        public HomeController(DataContext dataContext)
+        public HomeController(ILogger<HomeController> log)
         {
-            _dataContext = dataContext;
+            logger = log;
         }
         public IActionResult Index()
         {
+            logger.LogDebug("Bruce was here!");
             return View();
         }
 
